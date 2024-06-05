@@ -14,6 +14,7 @@ namespace Installers
         {
             _projectEvents = new ProjectEvents();
             Container.BindInstance(_projectEvents).AsSingle();
+            Container.Bind<InputEvents>().AsSingle();
         }
 
         private void Awake()

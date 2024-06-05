@@ -46,12 +46,12 @@ MonoBehaviour:
     - rid: 8516529642038362114
       type: {class: ToolbarSpace, ns: , asm: CustomToolbar.Editor}
       data:
-        IsEnabled: 1
+        IsEnabled: 0
         WidthInToolbar: 10
     - rid: 8516529642038362115
       type: {class: ToolbarSavingPrefs, ns: , asm: CustomToolbar.Editor}
       data:
-        IsEnabled: 1
+        IsEnabled: 0
         WidthInToolbar: 100
     - rid: 8516529642038362116
       type: {class: ToolbarClearPrefs, ns: , asm: CustomToolbar.Editor}
@@ -61,7 +61,7 @@ MonoBehaviour:
     - rid: 8516529642038362117
       type: {class: ToolbarSpace, ns: , asm: CustomToolbar.Editor}
       data:
-        IsEnabled: 1
+        IsEnabled: 0
         WidthInToolbar: 10
     - rid: 8516529642038362118
       type: {class: ToolbarReloadScene, ns: , asm: CustomToolbar.Editor}
