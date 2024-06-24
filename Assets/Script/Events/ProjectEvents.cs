@@ -7,4 +7,3 @@ namespace Events
         public UnityAction ProjectStarted;
     }
 }
-

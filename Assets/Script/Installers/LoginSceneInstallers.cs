@@ -2,7 +2,7 @@
 
 namespace Installers
 {
-    public class LoginSceneInstallers : MonoInstaller<LoginSceneInstallers>
+    public class LoginSceneInstaller : MonoInstaller<LoginSceneInstaller>
     {
         public override void InstallBindings()
         {

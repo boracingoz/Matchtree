@@ -10,4 +10,3 @@ namespace Events
         public UnityAction<Vector3> MouseUpGrid;
     }
 }
-

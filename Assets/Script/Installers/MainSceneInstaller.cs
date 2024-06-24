@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Installers
 {
-    public class MainScene : MonoInstaller
+    public class MainSceneInstaller : MonoInstaller<MainSceneInstaller>
     {
         [SerializeField] private Camera _camera;
         public override void InstallBindings()
