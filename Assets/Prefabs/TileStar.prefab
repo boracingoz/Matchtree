@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 592390161579381587, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: d127f4aada9b1dd458661c9592e771d1, type: 3}
+      objectReference: {fileID: 21300000, guid: 183f84a297af3aa47b4e6bb0490b6ec3, type: 3}
     - target: {fileID: 948645340808692064, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
       propertyPath: _id
       value: 3
@@ -23,6 +23,14 @@ PrefabInstance:
     - target: {fileID: 4298564109347808562, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
       propertyPath: m_Name
       value: TileStar
+      objectReference: {fileID: 0}
+    - target: {fileID: 7523355838028936159, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7523355838028936159, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7523355838028936159, guid: 41b5fd73b30ec3d4db90ebc18fc1614c, type: 3}
       propertyPath: m_LocalPosition.x
