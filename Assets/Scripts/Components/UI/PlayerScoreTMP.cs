@@ -4,6 +4,7 @@ using Extensions.DoTween;
 using Extensions.Unity.MonoHelper;
 using UnityEngine;
 using Zenject;
+using TMPro;
 
 namespace Components.UI
 {
@@ -14,6 +15,19 @@ namespace Components.UI
         public ITweenContainer TweenContainer{get;set;}
         private int _currCounterVal;
         private int _playerScore;
+      
+        
+
+        public int GetCurrentScore()
+        {
+            return _playerScore;
+        }
+
+        public void SetScore(int score)
+        {
+            _playerScore = score;
+        }
+
 
         private void Awake()
         {

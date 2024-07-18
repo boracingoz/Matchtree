@@ -37,6 +37,10 @@ namespace Components
             bool isGameOver = IsGameOver(out Tile hintTile, out GridDir hintDir);
 
             Debug.LogWarning($"isGameOver: {isGameOver}, hintTile {hintTile}, hintDir {hintDir}", hintTile);
+            if (isGameOver)
+            {
+                ShowGameOverPanel();
+            }
         }
         
         private void OnDrawGizmos()

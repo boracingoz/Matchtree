@@ -6483,6 +6483,7 @@ MonoBehaviour:
     - {fileID: 455497686}
     - {fileID: 233808783}
     - {fileID: 1160120934}
+    - {fileID: 814030482}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -6806,6 +6807,9 @@ MonoBehaviour:
     - Name: _lastMatches
       Entry: 6
       Data: 
+    - Name: playerScoreTMP
+      Entry: 10
+      Data: 100
   _gridSizeX: 10
   _gridSizeY: 10
   _gridBounds:
@@ -6958,9 +6962,13 @@ MonoBehaviour:
   - {fileID: 730874518}
   - {fileID: 178370366}
   - {fileID: 672981434}
+  - {fileID: 814030482}
   _bGTrans: {fileID: 2067633401}
   _borderTrans: {fileID: 1701029381}
   _scoreMulti: 0
+  _canvasGroup: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  gameOverScoreText: {fileID: 814030484}
 --- !u!4 &702152215
 Transform:
   m_ObjectHideFlags: 0
