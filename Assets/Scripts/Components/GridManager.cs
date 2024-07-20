@@ -1,17 +1,16 @@
-﻿using System;
-using TMPro;
+﻿﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Components.UI;
+using Settings;
 using DG.Tweening;
 using Events;
 using Extensions.DoTween;
 using Extensions.System;
 using Extensions.Unity;
-using Settings;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -23,7 +22,6 @@ namespace Components
         [Inject] private GridEvents GridEvents{get;set;}
         [Inject] private ProjectSettings ProjectSettings{get;set;}
         [BoxGroup(Order = 999)]
-        [Inject] private PlayerScoreTMP PlayerScoreTMP { get; set; }
 #if UNITY_EDITOR
         [TableMatrix(SquareCells = true, DrawElementMethod = nameof(DrawTile))]  
 #endif
@@ -54,11 +52,15 @@ namespace Components
         private Coroutine _hintRoutine;
         [SerializeField] private int _scoreMulti;
         private Settings _mySettings;
-        [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private GameObject gameOverPanel;
-        [SerializeField] private TextMeshProUGUI gameOverScoreText;
-        [SerializeField] private object playerScoreTMP;
         public ITweenContainer TweenContainer{get;set;}
+        
+        [SerializeField] private GameObject _matchParticlePrefab;
+
+        [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private PlayerScoreTMP playerScoreTMP;
+        [SerializeField] private TMP_Text gameOverScoreText;
+        private CanvasGroup canvasGroup;
+        
 
         private void Awake()
         {
@@ -98,6 +100,20 @@ namespace Components
             IsGameOver(out _hintTile, out _hintDir);
             GridEvents.GridLoaded?.Invoke(_gridBounds);
             GridEvents.InputStart?.Invoke();
+            canvasGroup = gameOverPanel.GetComponent<CanvasGroup>();
+            gameOverPanel.GetComponent<CanvasGroup>();
+
+            if (canvasGroup == null)
+            {
+                Debug.LogError("Canvas Group Null");
+                return;
+            }
+            canvasGroup.alpha = 0;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+            
+            gameOverPanel.SetActive(false); 
+            playerScoreTMP = FindObjectOfType<PlayerScoreTMP>();
         }
 
         private void OnEnable() {RegisterEvents();}
@@ -109,32 +125,6 @@ namespace Components
         }
 
         private bool CanMove(Vector2Int tileMoveCoord) => _grid.IsInsideGrid(tileMoveCoord);
-
-        // private bool HasMatch(Tile fromTile, Tile toTile, out List<List<Tile>> matches)
-        // {
-        //     matches = new List<List<Tile>>();
-        //     bool hasMatches = false;
-        //
-        //     List<Tile> matchesAll = _grid.GetMatchesYAll(toTile);
-        //     matchesAll.AddRange(_grid.GetMatchesXAll(toTile));
-        //
-        //     if(matchesAll.Count > 0)
-        //     {
-        //         matches.Add(matchesAll);
-        //     }
-        //
-        //     matchesAll = _grid.GetMatchesYAll(fromTile);
-        //     matchesAll.AddRange(_grid.GetMatchesXAll(fromTile));
-        //
-        //     if(matchesAll.Count > 0)
-        //     {
-        //         matches.Add(matchesAll);
-        //     }
-        //     
-        //     if(matches.Count > 0) hasMatches = true;
-        //
-        //     return hasMatches;
-        // }
 
         private bool HasAnyMatches(out List<List<Tile>> matches)
         {
@@ -255,71 +245,6 @@ namespace Components
             }
 
             return matches.Count == 0;
-        }
-        
-        private void ShowGameOverPanel()
-        {
-            _canvasGroup.alpha = 1;
-            _canvasGroup.interactable = true;
-            _canvasGroup.blocksRaycasts = true;
-
-            Time.timeScale = 0;
-            
-            
-            Debug.Log("show gameover panel");
-            gameOverPanel.SetActive(true);
-            gameOverScoreText.text = $"Score: {PlayerScoreTMP.GetCurrentScore()}";
-        }
-        
-        private void HideGameOverPanel()
-        {
-            _canvasGroup.alpha = 0;
-            _canvasGroup.interactable = false;
-            _canvasGroup.blocksRaycasts = false;
-
-            Time.timeScale = 1;
-
-            Debug.Log("hide gameover panel");
-            gameOverPanel.SetActive(false);
-        }
-
-        public void OnNewGameButtonClicked()
-        {
-            Debug.Log("New Game button clicked. Restarting game");
-            HideGameOverPanel();
-            RestartGame();
-        }
-
-        public void RestartGame()
-        {
-            ClearGrid();
-            ResetScore();
-
-            StartGame();
-        }
-
-        private void ClearGrid()
-        {
-            foreach (Tile tile in _grid)
-            {
-                if (tile != null)
-                {
-                    DespawnTile(tile);
-                }
-            }
-        }
-
-        private void ResetScore()
-        {
-            _scoreMulti = 0;
-            PlayerScoreTMP.SetScore(0);
-        }
-        
-        
-
-        private void StartGame()
-        {
-            SpawnAndAllocateTiles();
         }
 
         private void SpawnAndAllocateTiles()
@@ -459,20 +384,98 @@ namespace Components
 
         private IEnumerator DestroyRoutine()
         {
-            foreach (List<Tile> matches in _lastMatches)
+            foreach(List<Tile> matches in _lastMatches)
             {
                 IncScoreMulti();
                 matches.DoToAll(DespawnTile);
-
+                
+                foreach(Tile tile in matches)
+                {
+                    Vector3 particlePosition = _grid.CoordsToWorld(_transform, tile.Coords);
+                    Instantiate(_matchParticlePrefab, particlePosition, Quaternion.identity);
+                }
+                
                 //TODO: Show score multi text in ui as PunchScale
-
+                
                 GridEvents.MatchGroupDespawn?.Invoke(matches.Count * _scoreMulti);
-
+    
                 yield return new WaitForSeconds(0.1f);
             }
-
+            
             SpawnAndAllocateTiles();
             TestGameOver();
+        }
+        private void TestGameOver()
+        {
+            bool isGameOver = IsGameOver(out Tile hintTile, out GridDir hintDir);
+
+            Debug.LogWarning($"isGameOver: {isGameOver}, hintTile {hintTile}, hintDir {hintDir}", hintTile);
+            if (isGameOver)
+            {
+                ShowGameOverPanel();
+            }
+        }
+        private void ShowGameOverPanel()
+        {
+            canvasGroup.alpha = 1;
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+
+            Time.timeScale = 0;
+
+
+            Debug.Log("show gameover panel");
+            gameOverPanel.SetActive(true);
+            gameOverScoreText.text = $"Score: {playerScoreTMP.GetCurrentScore()}";
+        }
+
+        private void HideGameOverPanel()
+        {
+            canvasGroup.alpha = 0;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+
+            Time.timeScale = 1;
+
+            Debug.Log("hide gameover panel");
+            gameOverPanel.SetActive(false);
+        }
+
+        public void OnNewGameButtonClicked()
+        {
+            Debug.Log("New Game button clicked. Restarting game");
+            HideGameOverPanel();
+            RestartGame();
+        }
+
+        public void RestartGame()
+        {
+            ClearGrid();
+            ResetScore();
+
+            StartGame();
+        }
+
+        private void ClearGrid()
+        {
+            foreach (Tile tile in _grid)
+            {
+                if (tile != null)
+                {
+                    DespawnTile(tile);
+                }
+            }
+        }
+
+        private void ResetScore()
+        {
+            _scoreMulti = 0;
+            playerScoreTMP.SetScore(0);
+        }
+
+        private void StartGame()
+        {
+            SpawnAndAllocateTiles();
         }
 
         private void DespawnTile(Tile e)
@@ -617,8 +620,6 @@ namespace Components
             }
         }
 
-        
-
         private void UnRegisterEvents()
         {
             InputEvents.MouseDownGrid -= OnMouseDownGrid;
@@ -653,7 +654,5 @@ namespace Components
             public GameObject BorderTop => _borderTop;
             public GameObject BorderBot => _borderBot;
         }
-
-       
     }
 }

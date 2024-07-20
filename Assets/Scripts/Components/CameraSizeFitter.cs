@@ -7,10 +7,10 @@ namespace Components
 {
     public class CameraSizeFitter : EventListenerMono
     {
-        [Inject] private GridEvents GridEvents{get;set;}
+        [Inject] private GridEvents GridEvents { get; set; }
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _transform;
-        
+
         protected override void RegisterEvents()
         {
             GridEvents.GridLoaded += OnGridLoaded;

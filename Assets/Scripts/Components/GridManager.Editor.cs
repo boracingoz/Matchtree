@@ -1,12 +1,12 @@
 ﻿﻿using System.Collections.Generic;
 using System.Linq;
+using Settings;
 using Extensions.System;
 using Extensions.Unity;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Unity.VisualScripting;
 #if UNITY_EDITOR
-using Settings;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -31,18 +31,14 @@ namespace Components
         [Button]
         private void TestGridDir(Vector2 input) {Debug.LogWarning(GridF.GetGridDir(input));}
 
-        [Button]
-        private void TestGameOver()
-        {
-            bool isGameOver = IsGameOver(out Tile hintTile, out GridDir hintDir);
-
-            Debug.LogWarning($"isGameOver: {isGameOver}, hintTile {hintTile}, hintDir {hintDir}", hintTile);
-            if (isGameOver)
-            {
-                ShowGameOverPanel();
-            }
-        }
-        
+        // [Button]
+        // private void TestGameOver()
+        // {
+        //     bool isGameOver = IsGameOver(out Tile hintTile, out GridDir hintDir);
+        //
+        //     Debug.LogWarning($"isGameOver: {isGameOver}, hintTile {hintTile}, hintDir {hintDir}", hintTile);
+        // }
+        //
         private void OnDrawGizmos()
         {
             if(_lastMatches == null) return;
