@@ -450,9 +450,16 @@ namespace Components
 
         public void OnNewGameButtonClicked()
         {
-            Debug.Log("New Game button clicked. Restarting game");
-            HideGameOverPanel();
-            RestartGame();
+            try
+            {
+                Debug.Log("New Game button clicked. Restarting game");
+                HideGameOverPanel();
+                RestartGame();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error occurred while restarting the game: {ex.Message}");
+            }
         }
 
         public void RestartGame()
