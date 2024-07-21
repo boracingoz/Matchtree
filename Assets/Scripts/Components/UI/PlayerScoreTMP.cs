@@ -1,7 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using Extensions.DoTween;
 using Extensions.Unity.MonoHelper;
+using UnityEngine;
 using Zenject;
 
 public class PlayerScoreTMP : UITMP, ITweenContainerBind
@@ -24,8 +27,6 @@ public class PlayerScoreTMP : UITMP, ITweenContainerBind
 
     private void OnMatchGroupDespawn(int arg0)
     {
-        //    Debug.LogWarning($"{arg0}");
-
         _playerScore += arg0;
 
         if(_counterTween.IsActive()) _counterTween.Kill();

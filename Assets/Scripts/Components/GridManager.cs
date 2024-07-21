@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,14 +100,21 @@ namespace Components
             IsGameOver(out _hintTile, out _hintDir);
             GridEvents.GridLoaded?.Invoke(_gridBounds);
             GridEvents.InputStart?.Invoke();
-            canvasGroup = gameOverPanel.GetComponent<CanvasGroup>();
-            gameOverPanel.GetComponent<CanvasGroup>();
+            gameOverPanel = GameObject.Find("GameOverCanvas");
 
-            if (canvasGroup == null)
+
+            if (gameOverPanel != null)
             {
-                Debug.LogError("Canvas Group Null");
-                return;
+                canvasGroup = gameOverPanel.GetComponent<CanvasGroup>();
+                gameOverScoreText = gameOverPanel.GetComponentInChildren<TMP_Text>();
+
+                if (canvasGroup == null)
+                {
+                    Debug.LogError("Canvas Group Null");
+                    return;
+                }
             }
+
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
