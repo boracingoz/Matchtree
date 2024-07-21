@@ -1,9 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Extensions.Unity.MonoHelper
 {
     public abstract class EventListenerMono : MonoBehaviour
     {
+        private void Start()
+        {
+            RegisterEvents();
+        }
+
         protected virtual void OnEnable()
         {
             RegisterEvents();

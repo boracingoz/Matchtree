@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +59,7 @@ namespace Components
         [SerializeField] private GameObject gameOverPanel;
         [SerializeField] private PlayerScoreTMP playerScoreTMP;
         [SerializeField] private TMP_Text gameOverScoreText;
-        private CanvasGroup canvasGroup;
+        [SerializeField]private CanvasGroup _canvasGroup;
         
 
         private void Awake()
@@ -88,8 +88,8 @@ namespace Components
 
         private void Start()
         {
-            for(int x = 0; x < _grid.GetLength(0); x ++)
-            for(int y = 0; y < _grid.GetLength(1); y ++)
+            for (int x = 0; x < _grid.GetLength(0); x++)
+            for (int y = 0; y < _grid.GetLength(1); y++)
             {
                 Tile tile = _grid[x, y];
 
@@ -105,21 +105,21 @@ namespace Components
 
             if (gameOverPanel != null)
             {
-                canvasGroup = gameOverPanel.GetComponent<CanvasGroup>();
+                _canvasGroup = gameOverPanel.GetComponent<CanvasGroup>();
                 gameOverScoreText = gameOverPanel.GetComponentInChildren<TMP_Text>();
 
-                if (canvasGroup == null)
+                if (_canvasGroup == null)
                 {
-                    Debug.LogError("Canvas Group Null");
+                    Debug.LogError("Canvas Group null");
                     return;
                 }
             }
 
-            canvasGroup.alpha = 0;
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
-            
-            gameOverPanel.SetActive(false); 
+            _canvasGroup.alpha = 0;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+
+            gameOverPanel.SetActive(false);
             playerScoreTMP = FindObjectOfType<PlayerScoreTMP>();
         }
 
@@ -424,9 +424,9 @@ namespace Components
         }
         private void ShowGameOverPanel()
         {
-            canvasGroup.alpha = 1;
-            canvasGroup.interactable = true;
-            canvasGroup.blocksRaycasts = true;
+            _canvasGroup.alpha = 1;
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
 
             Time.timeScale = 0;
 
@@ -438,9 +438,9 @@ namespace Components
 
         private void HideGameOverPanel()
         {
-            canvasGroup.alpha = 0;
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
+            _canvasGroup.alpha = 0;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
 
             Time.timeScale = 1;
 
