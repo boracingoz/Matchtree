@@ -1,11 +1,9 @@
-﻿using Settings;
-
+﻿
 public static class EnvVar
 {
     public const string LoginSceneName = "Login";
     public const string MainSceneName = "Main";
     public const string SettingsPath = "Settings/";
-    public const string ProjectSettingsPath = "Settings/" + nameof(ProjectSettings);
     public const float TileHalfExtends = 0.5000f;
     public const int BorderSpriteLayer = 3;
     public const int MaskBGSpriteLayer = 2;

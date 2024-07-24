@@ -1,5 +1,4 @@
 using Events;
-using Settings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -11,12 +10,10 @@ namespace Installers
         private ProjectEvents _projectEvents;
         private InputEvents _inputEvents;
         private GridEvents _gridEvents;
-        private ProjectSettings _projectSettings;
 
         public override void InstallBindings()
         {
             InstallEvents();
-            InstallSettings();
         }
 
         private void InstallEvents()
@@ -31,11 +28,7 @@ namespace Installers
             Container.BindInstance(_gridEvents).AsSingle();
         }
 
-        private void InstallSettings()
-        {
-            _projectSettings = Resources.Load<ProjectSettings>(EnvVar.ProjectSettingsPath);
-            Container.BindInstance(_projectSettings).AsSingle();
-        }
+      
 
         private void Awake()
         {

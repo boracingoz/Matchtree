@@ -1,5 +1,6 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Components;
 using Extensions.System;
 using Extensions.Unity;
@@ -13,12 +14,16 @@ public static class GridF
     {
         int lastPrefabID = -1;
         int lastIDCounter = 0;
+        // Berlirli bir kordinat için ID leri uygun renkleri belirliyo
 
         int leftMax = coord.x - MatchOffset;
         int rightMax = coord.x + MatchOffset;
+        
 
         leftMax = ClampInsideGrid(leftMax, grid.GetLength(0));
         rightMax = ClampInsideGrid(rightMax, grid.GetLength(0));
+        
+        //ClampInsideGrid = gridin sınırlarını açmamak için.
 
         for(int x = leftMax; x <= rightMax; x ++)
         {
@@ -30,6 +35,7 @@ public static class GridF
                 lastPrefabID = -1;
 
                 continue;
+                // boş Tile gelirse sayacı sıfırlıyor 
             }
 
             if(lastPrefabID == -1)
@@ -89,30 +95,41 @@ public static class GridF
             if(lastIDCounter == MatchOffset) results.Remove(lastPrefabID);
         }
     }
-
+    
     public static bool TryGetMostBelowEmpty(this Tile[,] thisGrid, Tile thisTile, out Vector2Int belowTileCoords)
     {
+        //  Başlangıç olarak, verilen Tile koordinatlarını alır
         Vector2Int belowCoords = thisTile.Coords;
         belowTileCoords = belowCoords;
         
         belowCoords.y --;
+        // Verilen tile ın coord hesaplnadı
 
         if(thisGrid.IsInsideGrid(belowCoords) == false) return false;
-
+       // Tile gridin dışındaysa false verir
+        
         if(thisGrid.Get(belowCoords)) return false;
+        // Eğer Gridin içindeyse Dolu mu değil mi diye bakıyoruz dolu ise false
         
         for(int y = belowCoords.y; y < 0; y --)
-        {
+            // Döngü ile aşağı doğru bakıyoruz
+        {   
             Vector2Int thisCoords = new(thisTile.Coords.x, y);
+            // şu anki y ile orjinal x coord. alır yeni kord oluşturur
             
             Tile belowTile = thisGrid.Get(thisCoords);
+            // Bu coord taki tile ı alır
 
+            
             if(belowTile == false)
+                // Eğer hüce boşssa False
             {
+                // Bu boş tile ın coord kaydeder
                 belowTileCoords = thisCoords;
             }
             else
             {
+                // Doluysa döngü sonlansın
                 break;
             }
         }
@@ -129,15 +146,19 @@ public static class GridF
         Tile thisTile = grid.Get(coord);
 
         List<Tile> matches = new();
+        // Eşleşen hücreleri tutmak için yeni bir liste oluşturduk
 
         int botMax = coord.y - MatchOffset;
         int topMax = coord.y + MatchOffset + 1;
-
+        // Kontrol edilecek alt ve üst sınırları belirler.
+        
         int gridLength = grid.GetLength(1);
         int gridMin = 0;
+        // gridin boyutlarını alır
 
         if(botMax < gridMin) botMax = gridMin;
         if(topMax > gridLength) topMax = gridLength;
+        // Sınırı Grid boyutlarına göre ayarlar
         
         for(int y = botMax; y < topMax; y ++)
         {
@@ -147,21 +168,26 @@ public static class GridF
             {
                 matches.Add(currTile);
             }
+            // Eğer hücre IDsi eşleşiyora listeye ekler
+            
             else if(matches.Contains(thisTile) == false)
             {
                 matches.Clear();
             }
+            // Eğer başlangıc Tile henüz listeye eklenmemişse ve eşleşme yoksa listeyi temizler
             else if(matches.Contains(thisTile))
             {
                 break;
             }
+            // Eğer başlangıc tike listeye eklenmişse ve eşleşme yoksa sonlandır
         }
 
         if(matches.Count < 3)
         {
             matches.Clear();
         }
-        
+        // Eğer 3'ten az eşleşme varsa, listeyi temizler.
+
         return matches;
     }
 
@@ -289,14 +315,19 @@ public static class GridF
 
     public static bool IsInsideGrid(this Tile[,] grid, int axisCoord, int axisIndex)
     {
+        // Grid sınırı min değeri 0
         const int min = 0;
         int max = grid.GetLength(axisIndex);
-
+        // Grid max değeri belirtilen x veya y uzunluğu
         return axisCoord >= min && axisCoord < max;
+        // Verilen coord max ile min arasında oluğ olmadığı
     }
     
     public static bool IsInsideGrid(this Tile[,] grid, Vector2Int coord)
     {
+        // İlk metodu kullanarak x koordinatının Grid içinde olup olmadığını kontrol eder
+        // ve y koordinatının Grid içinde olup olmadığını kontrol eder
+        // Her iki kontrol de true dönerse, bu metot da true döner
         return grid.IsInsideGrid(coord.x, 0) && grid.IsInsideGrid(coord.y, 1);
     }
 
